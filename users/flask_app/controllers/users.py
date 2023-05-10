@@ -1,6 +1,6 @@
 from flask_app import app
 from flask import render_template, redirect, request
-from user import User
+from flask_app.models.user import User
 
 
 @app.route('/')
@@ -54,7 +54,3 @@ def add_user():
 def delete_user(user_id):
     User.delete(user_id)
     return redirect('/users')
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
