@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <h1 class="bold text-center text-decoration-underline">{{dojo.name}} Ninjas</h1>
+    <h1 class="bold text-center text-decoration-underline">{{one_dojo.name}} Ninjas</h1>
     <table class="table w-75 mx-auto border border-black border-3 table-striped thead-dark text-center">
         <thead class="table-dark">
             <tr>
@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            {%for ninja in ninjas%}
+            {%for ninja in one_dojo.ninjas%}
             <tr>
                 <td>{{ninja.first_name}}</td>
                 <td>{{ninja.last_name}}</td>
