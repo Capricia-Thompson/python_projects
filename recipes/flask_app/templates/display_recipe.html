@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{recipe.name}}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+</head>
+
+<body class="p-5 text-bg-dark">
+    <div class="d-flex justify-content-between w-50 mx-auto">
+        <h1 class="text-info w-50 mx-auto text-decoration-underline text-center mb-5">Welcome {{session['user_name']}}
+        </h1>
+        <div class="d-flex justify-content-evenly w-25 mx-auto">
+            <a href="/user/{{session['user_id']}}">back to recipes</a>
+            <a href="/logout">logout</a>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between my-3 w-50 mx-auto">
+        <h1>{{recipe.name}}</h1>
+        <h3>Posted by: {{recipe.first_name}}</h3>
+    </div>
+    <div class="border border-info-subtle rounded p-3 w-50 mx-auto">
+        <div class="d-flex">
+            <p class="w-25 text-center">Description:</p>
+            <p class="w-75">{{recipe.description}}</p>
+        </div>
+        <div class="my-3 d-flex">
+            <p class="w-25 text-center">Under 30 minutes::</p>
+            <p class="w-75">{{recipe.time}}</p>
+        </div>
+        <div class="my-3 d-flex">
+            <p class="w-25 text-center">Instructions:</p>
+            <p class="w-75">{{recipe.instructions}}</p>
+        </div>
+        <div class="my-3 d-flex">
+            <p class="w-25 text-center">Date Prepared:</p>
+            <p class="w-75">{{recipe.prep_date}}</p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
