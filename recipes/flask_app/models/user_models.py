@@ -1,5 +1,8 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask import flash
+import re
+
+REGEX_EMAIL = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
 
 
 class User:
@@ -26,19 +29,22 @@ class User:
     def valid_user(user):
         is_valid = True
         if len(user['fname']) < 1:
-            flash("First name is required.")
+            flash("First name is required.", 'reg')
             is_valid = False
         if len(user['lname']) < 1:
-            flash("Last name is required.")
+            flash("Last name is required.", 'reg')
             is_valid = False
         if len(user['email']) < 1:
-            flash("Email is required.")
+            flash("Email is required.", 'reg')
+            is_valid = False
+        if not (re.match(REGEX_EMAIL, user['email'])):
+            flash("Email format not valid.", 'reg')
             is_valid = False
         if len(user['password']) < 6:
-            flash("Password must be at least 7 characters long.")
+            flash("Password must be at least 7 characters long.", 'reg')
             is_valid = False
         if user['password'] != user['confirm_password']:
-            flash("Password entered must match.")
+            flash("Password entered must match.", 'reg')
             is_valid = False
         return is_valid
 

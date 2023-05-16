@@ -11,19 +11,10 @@ def new_recipe():
     return render_template('add_recipe.html')
 
 
-@app.route('/user/<int:user_id>')
-def display_dash(user_id):
-    if 'user_id' not in session:
-        return redirect('/')
-    if session['user_id'] != user_id:
-        return redirect('/')
-    all_recipes = Recipe.get_all_recipes()
-    user_id = session['user_id']
-    return render_template('dashboard.html', all_recipes=all_recipes, user_id=user_id)
-
-
 @app.route('/recipe/create', methods=['POST'])
 def create_recipe():
+    if not Recipe.valid_recipe(request.form):
+        return redirect('/recipe/new')
     data = {
         'name': request.form['name'],
         'description': request.form['description'],
@@ -32,21 +23,6 @@ def create_recipe():
         'time': request.form['time'],
         'user_id': session['user_id']
     }
-    if len(data['name']) < 2:
-        flash("Name is required")
-        return redirect('recipe/new')
-    if len(data['description']) < 2:
-        flash("Description is required")
-        return redirect('recipe/new')
-    if len(data['instructions']) < 2:
-        flash("Instructions are required")
-        return redirect('recipe/new')
-    if data['prep_date'] == None:
-        flash("Name is required")
-        return redirect('recipe/new')
-    if data['time'] == None:
-        flash("Name is required")
-        return redirect('recipe/new')
     Recipe.create_recipe(data)
     return redirect(f'/user/{session["user_id"]}')
 
@@ -55,15 +31,20 @@ def create_recipe():
 def display_recipe(recipe_id):
     data = {'id': recipe_id}
     recipe = Recipe.get_recipe(data)
+    if 'user_id' not in session:
+        return redirect('/')
     return render_template('display_recipe.html', recipe=recipe)
 
 
 @app.route('/recipe/edit/<int:recipe_id>')
 def edit_recipe(recipe_id):
-    if 'user_id' not in session:
-        return redirect('/')
     data = {'id': recipe_id}
     recipe = Recipe.get_recipe(data)
+    if 'user_id' not in session:
+        return redirect('/')
+    if session['user_id'] != recipe.user_id:
+        flash("You can only edit your own recipes")
+        return redirect(f'/recipe/{recipe.id}')
     return render_template('edit_recipe.html', recipe=recipe)
 
 
@@ -84,5 +65,12 @@ def update_recipe():
 
 @app.route('/recipe/delete/<int:recipe_id>')
 def delete_recipe(recipe_id):
+    data = {'id': recipe_id}
+    recipe = Recipe.get_recipe(data)
+    if 'user_id' not in session:
+        return redirect('/')
+    if session['user_id'] != recipe.user_id:
+        flash("You can only delete your own recipes")
+        return redirect(f'/recipe/{recipe.id}')
     Recipe.delete_recipe(recipe_id)
     return redirect(f'/user/{session["user_id"]}')

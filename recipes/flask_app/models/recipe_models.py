@@ -17,6 +17,25 @@ class Recipe:
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
 
+    @staticmethod
+    def valid_recipe(data):
+        is_valid = True
+        if len(data['name']) < 2:
+            flash("Name is required.")
+            is_valid = False
+        if len(data['description']) < 2:
+            flash("Description is required.")
+            is_valid = False
+        if len(data['instructions']) < 2:
+            flash("Instructions are required.")
+            is_valid = False
+        if 'prep date' not in data:
+            flash("Preparation date is required.")
+            is_valid = False
+        if 'time' not in data:
+            flash("Is your recipe under 30 minutes?")
+        return is_valid
+
     @classmethod
     def create_recipe(cls, data):
         query = """INSERT INTO recipes (name, description, instructions, prep_date, time, user_id) VALUES (%(name)s, %(description)s,%(instructions)s,%(prep_date)s, %(time)s, %(user_id)s);"""
@@ -50,7 +69,18 @@ class Recipe:
     def get_recipe(cls, data):
         query = """SELECT * FROM recipes LEFT JOIN users ON users.id = recipes.user_id WHERE recipes.id = %(id)s;"""
         results = connectToMySQL('recipes').query_db(query, data)
-        recipe = results[0]
+        for row in results:
+            user_data = {
+                'id': row['users.id'],
+                'first_name': row['first_name'],
+                'last_name': row['last_name'],
+                'email': row['email'],
+                'password': row['password'],
+                'created_at': row['users.created_at'],
+                'updated_at': row['users.updated_at']
+            }
+            recipe = cls(row)
+            recipe.user = User(user_data)
         print(recipe)
         return recipe
 
